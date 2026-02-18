@@ -1,105 +1,105 @@
-پاسخ‌های کامل سوالات Concurrency در Go
+‏پاسخ‌های کامل سوالات Concurrency در Go
 
-بخش پایه
+‏بخش پایه
 
-1) goroutine چیست و با thread چه تفاوتی دارد؟
-پاسخ:
-- goroutine واحد اجرای سبک در runtime Go است، نه thread سیستم‌عامل مستقل.
-- runtime زمان‌بندی M:N انجام می‌دهد: تعداد زیادی goroutine روی تعداد محدود thread اجرا می‌شوند.
-- ساخت goroutine ارزان‌تر از thread است ولی «رایگان» نیست.
-- برنامه‌نویس باید synchronization/cancellation را صریح مدیریت کند.
+‏1) goroutine چیست و با thread چه تفاوتی دارد؟
+‏پاسخ:
+‏- goroutine واحد اجرای سبک در runtime Go است، نه thread سیستم‌عامل مستقل.
+‏- runtime زمان‌بندی M:N انجام می‌دهد: تعداد زیادی goroutine روی تعداد محدود thread اجرا می‌شوند.
+‏- ساخت goroutine ارزان‌تر از thread است ولی «رایگان» نیست.
+‏- برنامه‌نویس باید synchronization/cancellation را صریح مدیریت کند.
 
-2) تفاوت channel با mutex در چیست؟
-پاسخ:
-- mutex برای محافظت از shared state است.
-- channel برای انتقال پیام/مالکیت داده بین goroutineها مناسب است.
-- قاعده عملی: اگر state مشترک داری mutex ساده‌تر است، اگر pipeline/coordination داری channel طبیعی‌تر است.
-- ترکیب این دو رایج و صحیح است؛ dogma «فقط channel» اشتباه است.
+‏2) تفاوت channel با mutex در چیست؟
+‏پاسخ:
+‏- mutex برای محافظت از shared state است.
+‏- channel برای انتقال پیام/مالکیت داده بین goroutineها مناسب است.
+‏- قاعده عملی: اگر state مشترک داری mutex ساده‌تر است، اگر pipeline/coordination داری channel طبیعی‌تر است.
+‏- ترکیب این دو رایج و صحیح است؛ dogma «فقط channel» اشتباه است.
 
-3) buffered vs unbuffered channel را با مثال توضیح بده.
-پاسخ:
-- unbuffered: send/recv همزمان handshake می‌خواهند؛ coupling زمانی بالا.
-- buffered: producer می‌تواند تا ظرفیت مشخص جلو برود؛ decouple موقت.
-- مثال: log/event ingestion با buffer کوچک برای جذب spike کوتاه.
-- buffer خیلی بزرگ می‌تواند مشکل اصلی را پنهان کند و memory pressure بسازد.
+‏3) buffered vs unbuffered channel را با مثال توضیح بده.
+‏پاسخ:
+‏- unbuffered: send/recv همزمان handshake می‌خواهند؛ coupling زمانی بالا.
+‏- buffered: producer می‌تواند تا ظرفیت مشخص جلو برود؛ decouple موقت.
+‏- مثال: log/event ingestion با buffer کوچک برای جذب spike کوتاه.
+‏- buffer خیلی بزرگ می‌تواند مشکل اصلی را پنهان کند و memory pressure بسازد.
 
-4) چه کسی باید channel را close کند؟
-پاسخ:
-- اصولا sender مالک close است، نه receiver.
-- close یعنی «ارسال جدید نداریم»، نه «receiverها تمام شدند».
-- close کردن اشتباه از receiver باعث panic یا race منطقی می‌شود.
-- در multi-producer معمولا coordinator واحد close را انجام می‌دهد.
+‏4) چه کسی باید channel را close کند؟
+‏پاسخ:
+‏- اصولا sender مالک close است، نه receiver.
+‏- close یعنی «ارسال جدید نداریم»، نه «receiverها تمام شدند».
+‏- close کردن اشتباه از receiver باعث panic یا race منطقی می‌شود.
+‏- در multi-producer معمولا coordinator واحد close را انجام می‌دهد.
 
-بخش متوسط
+‏بخش متوسط
 
-1) race condition چیست و چطور تشخیص می‌دهی؟
-پاسخ:
-- دسترسی همزمان حداقل یک write روی داده مشترک بدون synchronization.
-- علائم: نتیجه غیرقطعی، flaky behavior، bugهای غیرقابل بازتولید.
-- ابزار اصلی: `go test -race` به‌همراه تست‌های concurrent.
-- درمان: lock، channel ownership، immutability، یا redesign data flow.
+‏1) race condition چیست و چطور تشخیص می‌دهی؟
+‏پاسخ:
+‏- دسترسی همزمان حداقل یک write روی داده مشترک بدون synchronization.
+‏- علائم: نتیجه غیرقطعی، flaky behavior، bugهای غیرقابل بازتولید.
+‏- ابزار اصلی: `go test -race` به‌همراه تست‌های concurrent.
+‏- درمان: lock، channel ownership، immutability، یا redesign data flow.
 
-2) deadlock رایج در Go چیست؟
-پاسخ:
-- goroutineها منتظر هم می‌مانند و پیشرفتی رخ نمی‌دهد.
-- مثال: send روی channel بدون receiver، یا lock ordering معکوس بین دو mutex.
-- پیشگیری: timeout/context، lock ordering ثابت، اجتناب از block بی‌مرز.
-- observability با goroutine dump در زمان incident بسیار کمک می‌کند.
+‏2) deadlock رایج در Go چیست؟
+‏پاسخ:
+‏- goroutineها منتظر هم می‌مانند و پیشرفتی رخ نمی‌دهد.
+‏- مثال: send روی channel بدون receiver، یا lock ordering معکوس بین دو mutex.
+‏- پیشگیری: timeout/context، lock ordering ثابت، اجتناب از block بی‌مرز.
+‏- observability با goroutine dump در زمان incident بسیار کمک می‌کند.
 
-3) چگونه worker pool پیاده می‌کنی؟
-پاسخ:
-- یک queue jobs، N worker goroutine، WaitGroup برای sync.
-- cancellation با context، و close jobs هنگام پایان producer.
-- retry policy برای transient failure و metric برای queue depth/latency.
-- size pool باید با benchmark و ظرفیت I/O/CPU تعیین شود نه حدس.
+‏3) چگونه worker pool پیاده می‌کنی؟
+‏پاسخ:
+‏- یک queue jobs، N worker goroutine، WaitGroup برای sync.
+‏- cancellation با context، و close jobs هنگام پایان producer.
+‏- retry policy برای transient failure و metric برای queue depth/latency.
+‏- size pool باید با benchmark و ظرفیت I/O/CPU تعیین شود نه حدس.
 
-4) چه زمانی RWMutex بهتر از Mutex است؟
-پاسخ:
-- وقتی read بسیار زیاد و write کم است و read section کوتاه است.
-- اگر writeها frequent باشند، RWMutex می‌تواند overhead اضافه بدهد.
-- اول `Mutex` ساده، بعد در صورت نیاز و اندازه‌گیری بهینه‌سازی.
-- starvation writer در workload خاص باید بررسی شود.
+‏4) چه زمانی RWMutex بهتر از Mutex است؟
+‏پاسخ:
+‏- وقتی read بسیار زیاد و write کم است و read section کوتاه است.
+‏- اگر writeها frequent باشند، RWMutex می‌تواند overhead اضافه بدهد.
+‏- اول `Mutex` ساده، بعد در صورت نیاز و اندازه‌گیری بهینه‌سازی.
+‏- starvation writer در workload خاص باید بررسی شود.
 
-5) چرا استفاده بی‌رویه از goroutine خطرناک است؟
-پاسخ:
-- memory و scheduling overhead بالا می‌رود.
-- در I/O کند، هزاران goroutine بلااستفاده latency tail و GC را بدتر می‌کنند.
-- backpressure از بین می‌رود و سرویس ناپایدار می‌شود.
-- باید سقف concurrency و queue policy داشته باشی.
+‏5) چرا استفاده بی‌رویه از goroutine خطرناک است؟
+‏پاسخ:
+‏- memory و scheduling overhead بالا می‌رود.
+‏- در I/O کند، هزاران goroutine بلااستفاده latency tail و GC را بدتر می‌کنند.
+‏- backpressure از بین می‌رود و سرویس ناپایدار می‌شود.
+‏- باید سقف concurrency و queue policy داشته باشی.
 
-بخش پیشرفته
+‏بخش پیشرفته
 
-1) چگونه از goroutine leak در long-running service جلوگیری می‌کنی؟
-پاسخ:
-- هر goroutine باید exit condition واضح داشته باشد (context cancel/channel close).
-- callهای خارجی timeout/deadline داشته باشند.
-- select روی `ctx.Done()` در loopهای طولانی اجباری است.
-- leak detection با metric goroutine count و profiling دوره‌ای.
+‏1) چگونه از goroutine leak در long-running service جلوگیری می‌کنی؟
+‏پاسخ:
+‏- هر goroutine باید exit condition واضح داشته باشد (context cancel/channel close).
+‏- callهای خارجی timeout/deadline داشته باشند.
+‏- select روی `ctx.Done()` در loopهای طولانی اجباری است.
+‏- leak detection با metric goroutine count و profiling دوره‌ای.
 
-2) یک pipeline concurrent طراحی کن که backpressure داشته باشد.
-پاسخ:
-- stageها با channel bounded به هم متصل شوند.
-- وقتی مصرف‌کننده کند شد، producer روی send block شود یا drop policy تعریف شود.
-- error channel/cancel مرکزی برای توقف کل pipeline.
-- هر stage باید ظرفیت و timeout مستقل داشته باشد.
+‏2) یک pipeline concurrent طراحی کن که backpressure داشته باشد.
+‏پاسخ:
+‏- stageها با channel bounded به هم متصل شوند.
+‏- وقتی مصرف‌کننده کند شد، producer روی send block شود یا drop policy تعریف شود.
+‏- error channel/cancel مرکزی برای توقف کل pipeline.
+‏- هر stage باید ظرفیت و timeout مستقل داشته باشد.
 
-3) چگونه graceful shutdown برای چند goroutine هم‌زمان می‌سازی؟
-پاسخ:
-- سیگنال termination -> cancel context مشترک.
-- stop پذیرش درخواست جدید، drain queue، finish in-flight تا deadline.
-- سپس close منابع (db, broker, http server).
-- با WaitGroup منتظر completion بمان و اگر deadline گذشت hard stop کن.
+‏3) چگونه graceful shutdown برای چند goroutine هم‌زمان می‌سازی؟
+‏پاسخ:
+‏- سیگنال termination -> cancel context مشترک.
+‏- stop پذیرش درخواست جدید، drain queue، finish in-flight تا deadline.
+‏- سپس close منابع (db, broker, http server).
+‏- با WaitGroup منتظر completion بمان و اگر deadline گذشت hard stop کن.
 
-4) سناریویی بگو که lock-free approach مناسب‌تر از mutex باشد.
-پاسخ:
-- counter/read-mostly path با atomicها (`atomic.Uint64`) در metrics.
-- وقتی critical section خیلی کوچک است و contention بالا داریم.
-- lock-free پیچیدگی correctness دارد؛ فقط برای hotspot اثبات‌شده استفاده شود.
-- برای state پیچیده، mutex غالبا امن‌تر و نگهداری‌پذیرتر است.
+‏4) سناریویی بگو که lock-free approach مناسب‌تر از mutex باشد.
+‏پاسخ:
+‏- counter/read-mostly path با atomicها (`atomic.Uint64`) در metrics.
+‏- وقتی critical section خیلی کوچک است و contention بالا داریم.
+‏- lock-free پیچیدگی correctness دارد؛ فقط برای hotspot اثبات‌شده استفاده شود.
+‏- برای state پیچیده، mutex غالبا امن‌تر و نگهداری‌پذیرتر است.
 
-5) چگونه latency tail را در workload concurrent کاهش می‌دهی؟
-پاسخ:
-- محدودکردن fan-out بی‌رویه و اعمال per-request timeout.
-- جداکردن pool سرویس‌های کند از سریع (bulkhead).
-- warm connection pool/cache برای حذف cold path.
-- اندازه‌گیری p95/p99، تحلیل slowest stage و حذف long contention/GC spikes.
+‏5) چگونه latency tail را در workload concurrent کاهش می‌دهی؟
+‏پاسخ:
+‏- محدودکردن fan-out بی‌رویه و اعمال per-request timeout.
+‏- جداکردن pool سرویس‌های کند از سریع (bulkhead).
+‏- warm connection pool/cache برای حذف cold path.
+‏- اندازه‌گیری p95/p99، تحلیل slowest stage و حذف long contention/GC spikes.

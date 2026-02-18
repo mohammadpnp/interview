@@ -1,84 +1,84 @@
-پاسخ‌های کامل سوالات Elasticsearch (PHP)
+‏پاسخ‌های کامل سوالات Elasticsearch (PHP)
 
-بخش پایه
+‏بخش پایه
 
-1) چرا برای جستجو از ES استفاده می‌کنیم؟
-پاسخ:
-- full-text search، relevance ranking، و تحلیل زبانی بهتر.
-- سرعت و قابلیت scale برای search workload.
-- aggregation و فیلترینگ ترکیبی قوی.
-- SQL DB برای transaction، ES برای search-oriented read.
+‏1) چرا برای جستجو از ES استفاده می‌کنیم؟
+‏پاسخ:
+‏- full-text search، relevance ranking، و تحلیل زبانی بهتر.
+‏- سرعت و قابلیت scale برای search workload.
+‏- aggregation و فیلترینگ ترکیبی قوی.
+‏- SQL DB برای transaction، ES برای search-oriented read.
 
-2) تفاوت match و term query چیست؟
-پاسخ:
-- `match` روی فیلد analyze‌شده و full-text behavior.
-- `term` روی match دقیق (keyword/exact value).
-- استفاده اشتباه باعث نتیجه ناقص یا غلط می‌شود.
-- schema mapping تعیین می‌کند کدام query مناسب است.
+‏2) تفاوت match و term query چیست؟
+‏پاسخ:
+‏- `match` روی فیلد analyze‌شده و full-text behavior.
+‏- `term` روی match دقیق (keyword/exact value).
+‏- استفاده اشتباه باعث نتیجه ناقص یا غلط می‌شود.
+‏- schema mapping تعیین می‌کند کدام query مناسب است.
 
-3) shard و replica چه اثری دارند؟
-پاسخ:
-- shard برای تقسیم بار و data.
-- replica برای availability و افزایش read throughput.
-- shard over-allocation سربار دارد.
-- sizing با رشد داده و query pattern تنظیم می‌شود.
+‏3) shard و replica چه اثری دارند؟
+‏پاسخ:
+‏- shard برای تقسیم بار و data.
+‏- replica برای availability و افزایش read throughput.
+‏- shard over-allocation سربار دارد.
+‏- sizing با رشد داده و query pattern تنظیم می‌شود.
 
-بخش متوسط
+‏بخش متوسط
 
-1) چگونه mapping مناسب طراحی می‌کنی؟
-پاسخ:
-- ابتدا use-case query (filter/sort/full-text) را مشخص می‌کنم.
-- فیلدها را text/keyword/numeric/date درست تعریف می‌کنم.
-- multi-field برای نیازهای ترکیبی.
-- dynamic mapping بی‌ضابطه را محدود می‌کنم.
+‏1) چگونه mapping مناسب طراحی می‌کنی؟
+‏پاسخ:
+‏- ابتدا use-case query (filter/sort/full-text) را مشخص می‌کنم.
+‏- فیلدها را text/keyword/numeric/date درست تعریف می‌کنم.
+‏- multi-field برای نیازهای ترکیبی.
+‏- dynamic mapping بی‌ضابطه را محدود می‌کنم.
 
-2) consistency بین DB و ES را چطور مدیریت می‌کنی؟
-پاسخ:
-- event/outbox-driven indexing.
-- idempotent upsert با version check.
-- retry + DLQ و reconciliation job.
-- پذیرش eventual consistency با SLA مشخص.
+‏2) consistency بین DB و ES را چطور مدیریت می‌کنی؟
+‏پاسخ:
+‏- event/outbox-driven indexing.
+‏- idempotent upsert با version check.
+‏- retry + DLQ و reconciliation job.
+‏- پذیرش eventual consistency با SLA مشخص.
 
-3) autocomplete را چگونه پیاده می‌کنی؟
-پاسخ:
-- analyzer مناسب prefix/ngram یا search-as-you-type.
-- index مجزا یا field مخصوص autocomplete.
-- ranking با popularity/business signals.
-- limit و debounce سمت کلاینت برای کنترل بار.
+‏3) autocomplete را چگونه پیاده می‌کنی؟
+‏پاسخ:
+‏- analyzer مناسب prefix/ngram یا search-as-you-type.
+‏- index مجزا یا field مخصوص autocomplete.
+‏- ranking با popularity/business signals.
+‏- limit و debounce سمت کلاینت برای کنترل بار.
 
-4) چرا بعضی queryها در ES کند می‌شوند؟
-پاسخ:
-- query pattern سنگین (wildcard بی‌رویه، deep pagination).
-- mapping نامناسب و cardinality بالا.
-- cluster under-resourced یا shard imbalance.
-- نیاز به profiling query و tuning مرحله‌ای.
+‏4) چرا بعضی queryها در ES کند می‌شوند؟
+‏پاسخ:
+‏- query pattern سنگین (wildcard بی‌رویه، deep pagination).
+‏- mapping نامناسب و cardinality بالا.
+‏- cluster under-resourced یا shard imbalance.
+‏- نیاز به profiling query و tuning مرحله‌ای.
 
-بخش پیشرفته
+‏بخش پیشرفته
 
-1) reindex بدون downtime را قدم‌به‌قدم توضیح بده.
-پاسخ:
-- index جدید با mapping صحیح ایجاد می‌کنم.
-- backfill داده و catch-up changes.
-- alias switch اتمیک read/write.
-- verify و سپس حذف index قدیم.
+‏1) reindex بدون downtime را قدم‌به‌قدم توضیح بده.
+‏پاسخ:
+‏- index جدید با mapping صحیح ایجاد می‌کنم.
+‏- backfill داده و catch-up changes.
+‏- alias switch اتمیک read/write.
+‏- verify و سپس حذف index قدیم.
 
-2) چگونه relevance نتایج را بر اساس رفتار کاربر بهبود می‌دهی؟
-پاسخ:
-- جمع‌آوری click/conversion feedback.
-- boosting پویا برای فیلدها و سیگنال‌های رفتاری.
-- A/B test روی ranking strategy.
-- جلوگیری از bias و degradation با guardrail metric.
+‏2) چگونه relevance نتایج را بر اساس رفتار کاربر بهبود می‌دهی؟
+‏پاسخ:
+‏- جمع‌آوری click/conversion feedback.
+‏- boosting پویا برای فیلدها و سیگنال‌های رفتاری.
+‏- A/B test روی ranking strategy.
+‏- جلوگیری از bias و degradation با guardrail metric.
 
-3) strategy تحمل خطا هنگام قطعی ES چیست؟
-پاسخ:
-- fallback محدود به DB/cache برای مسیرهای حیاتی.
-- degrade graceful با پیام مناسب.
-- queue برای index update عقب‌افتاده.
-- recovery plan و replay پس از بازگشت سرویس.
+‏3) strategy تحمل خطا هنگام قطعی ES چیست؟
+‏پاسخ:
+‏- fallback محدود به DB/cache برای مسیرهای حیاتی.
+‏- degrade graceful با پیام مناسب.
+‏- queue برای index update عقب‌افتاده.
+‏- recovery plan و replay پس از بازگشت سرویس.
 
-4) برای dataset چندصد میلیونی چه architecture پیشنهاد می‌دهی؟
-پاسخ:
-- shard strategy دقیق + hot/warm tiers.
-- ILM، rollover و retention policy.
-- ingest pipeline بهینه و bulk indexing.
-- observability و ظرفیت‌سنجی دوره‌ای.
+‏4) برای dataset چندصد میلیونی چه architecture پیشنهاد می‌دهی؟
+‏پاسخ:
+‏- shard strategy دقیق + hot/warm tiers.
+‏- ILM، rollover و retention policy.
+‏- ingest pipeline بهینه و bulk indexing.
+‏- observability و ظرفیت‌سنجی دوره‌ای.

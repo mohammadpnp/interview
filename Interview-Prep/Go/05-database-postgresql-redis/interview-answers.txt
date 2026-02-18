@@ -1,84 +1,84 @@
-پاسخ‌های کامل سوالات Database (PostgreSQL + Redis)
+‏پاسخ‌های کامل سوالات Database (PostgreSQL + Redis)
 
-بخش پایه
+‏بخش پایه
 
-1) تفاوت SQL و NoSQL را در عمل توضیح بده.
-پاسخ:
-- SQL (مثل PostgreSQL) برای داده ساخت‌یافته، relation قوی، transaction و query پیچیده عالی است.
-- NoSQL (مثل Redis/Mongo) برای الگوهای خاص (cache, document, high-throughput key-value) مناسب است.
-- انتخاب درست وابسته به access pattern و consistency نیاز است.
-- در اکثر سیستم‌های واقعی، ترکیب SQL + NoSQL بهترین نتیجه را می‌دهد.
+‏1) تفاوت SQL و NoSQL را در عمل توضیح بده.
+‏پاسخ:
+‏- SQL (مثل PostgreSQL) برای داده ساخت‌یافته، relation قوی، transaction و query پیچیده عالی است.
+‏- NoSQL (مثل Redis/Mongo) برای الگوهای خاص (cache, document, high-throughput key-value) مناسب است.
+‏- انتخاب درست وابسته به access pattern و consistency نیاز است.
+‏- در اکثر سیستم‌های واقعی، ترکیب SQL + NoSQL بهترین نتیجه را می‌دهد.
 
-2) index چیست و چه زمانی مضر می‌شود؟
-پاسخ:
-- index ساختار کمکی برای سریع‌تر پیدا کردن رکوردهاست.
-- روی read queryها سرعت می‌دهد، ولی write/update/delete را کندتر می‌کند چون index هم باید آپدیت شود.
-- index بی‌مصرف فضای زیاد می‌گیرد و planner را گیج می‌کند.
-- index باید بر اساس query واقعی و اندازه‌گیری انتخاب شود.
+‏2) index چیست و چه زمانی مضر می‌شود؟
+‏پاسخ:
+‏- index ساختار کمکی برای سریع‌تر پیدا کردن رکوردهاست.
+‏- روی read queryها سرعت می‌دهد، ولی write/update/delete را کندتر می‌کند چون index هم باید آپدیت شود.
+‏- index بی‌مصرف فضای زیاد می‌گیرد و planner را گیج می‌کند.
+‏- index باید بر اساس query واقعی و اندازه‌گیری انتخاب شود.
 
-3) Redis چه تفاوتی با PostgreSQL دارد؟
-پاسخ:
-- Redis in-memory و بسیار سریع است، مناسب cache/session/rate-limit/ephemeral data.
-- PostgreSQL منبع حقیقت تراکنشی با دوام بالا و query relational قوی است.
-- Redis جایگزین کامل SQL نیست؛ persistence و query model متفاوت است.
-- pattern رایج: source of truth در PG، شتاب‌دهی read در Redis.
+‏3) Redis چه تفاوتی با PostgreSQL دارد؟
+‏پاسخ:
+‏- Redis in-memory و بسیار سریع است، مناسب cache/session/rate-limit/ephemeral data.
+‏- PostgreSQL منبع حقیقت تراکنشی با دوام بالا و query relational قوی است.
+‏- Redis جایگزین کامل SQL نیست؛ persistence و query model متفاوت است.
+‏- pattern رایج: source of truth در PG، شتاب‌دهی read در Redis.
 
-بخش متوسط
+‏بخش متوسط
 
-1) N+1 Query چیست و چگونه رفع می‌شود؟
-پاسخ:
-- ابتدا یک query لیست والد می‌زند، سپس برای هر ردیف یک query جدا اجرا می‌شود.
-- نتیجه: تعداد query انفجاری و latency بالا.
-- رفع: eager loading، join مناسب، batching، cache هدفمند.
-- تشخیص: log query count per request و APM span analysis.
+‏1) N+1 Query چیست و چگونه رفع می‌شود؟
+‏پاسخ:
+‏- ابتدا یک query لیست والد می‌زند، سپس برای هر ردیف یک query جدا اجرا می‌شود.
+‏- نتیجه: تعداد query انفجاری و latency بالا.
+‏- رفع: eager loading، join مناسب، batching، cache هدفمند.
+‏- تشخیص: log query count per request و APM span analysis.
 
-2) چگونه یک query کند را تحلیل می‌کنی؟
-پاسخ:
-- از `EXPLAIN (ANALYZE, BUFFERS)` برای plan واقعی استفاده کن.
-- full scan، sort سنگین، join strategy نامناسب را پیدا کن.
-- سپس index درست، rewrite query، و کاهش row width/cardinality انجام بده.
-- قبل/بعد benchmark بگیر و اثر روی write cost را هم ارزیابی کن.
+‏2) چگونه یک query کند را تحلیل می‌کنی؟
+‏پاسخ:
+‏- از `EXPLAIN (ANALYZE, BUFFERS)` برای plan واقعی استفاده کن.
+‏- full scan، sort سنگین، join strategy نامناسب را پیدا کن.
+‏- سپس index درست، rewrite query، و کاهش row width/cardinality انجام بده.
+‏- قبل/بعد benchmark بگیر و اثر روی write cost را هم ارزیابی کن.
 
-3) transaction isolation levels چه هستند و کجا مهم‌اند؟
-پاسخ:
-- Read Committed، Repeatable Read، Serializable هرکدام trade-off بین concurrency و correctness دارند.
-- در مالی/موجودی حساس، anomalyها (dirty/non-repeatable/phantom) مهم می‌شوند.
-- isolation بالاتر correctness می‌دهد اما contention و latency را زیاد می‌کند.
-- باید به‌ازای use-case تنظیم کنی، نه یک نسخه برای همه.
+‏3) transaction isolation levels چه هستند و کجا مهم‌اند؟
+‏پاسخ:
+‏- Read Committed، Repeatable Read، Serializable هرکدام trade-off بین concurrency و correctness دارند.
+‏- در مالی/موجودی حساس، anomalyها (dirty/non-repeatable/phantom) مهم می‌شوند.
+‏- isolation بالاتر correctness می‌دهد اما contention و latency را زیاد می‌کند.
+‏- باید به‌ازای use-case تنظیم کنی، نه یک نسخه برای همه.
 
-4) چگونه cache stampede را کنترل می‌کنی؟
-پاسخ:
-- TTL jitter تا هم‌زمانی expire کم شود.
-- lock/lease کوتاه برای single-flight rebuild.
-- stale-while-revalidate در data قابل‌قبول.
-- pre-warm برای keyهای hot قبل از peak traffic.
+‏4) چگونه cache stampede را کنترل می‌کنی؟
+‏پاسخ:
+‏- TTL jitter تا هم‌زمانی expire کم شود.
+‏- lock/lease کوتاه برای single-flight rebuild.
+‏- stale-while-revalidate در data قابل‌قبول.
+‏- pre-warm برای keyهای hot قبل از peak traffic.
 
-بخش پیشرفته
+‏بخش پیشرفته
 
-1) برای inventory reservation چه مدل consistency پیشنهاد می‌کنی؟
-پاسخ:
-- مسیر رایج: reservation رکوردی با TTL + وضعیت (reserved/confirmed/released).
-- عملیات confirm/release idempotent و transaction-safe باشد.
-- lock کوتاه یا optimistic concurrency روی quantity/version.
-- cleanup job + reconciliation برای جلوگیری از drift لازم است.
+‏1) برای inventory reservation چه مدل consistency پیشنهاد می‌کنی؟
+‏پاسخ:
+‏- مسیر رایج: reservation رکوردی با TTL + وضعیت (reserved/confirmed/released).
+‏- عملیات confirm/release idempotent و transaction-safe باشد.
+‏- lock کوتاه یا optimistic concurrency روی quantity/version.
+‏- cleanup job + reconciliation برای جلوگیری از drift لازم است.
 
-2) در چه سناریویی partitioning در PostgreSQL لازم می‌شود؟
-پاسخ:
-- جدول بسیار بزرگ با دسترسی time-range یا tenant-based.
-- وقتی vacuum/maintenance یا index size عملکرد را خراب می‌کند.
-- partition pruning باید با query pattern هماهنگ باشد.
-- partitioning معجزه نیست؛ اگر query design بد باشد، مشکل باقی می‌ماند.
+‏2) در چه سناریویی partitioning در PostgreSQL لازم می‌شود؟
+‏پاسخ:
+‏- جدول بسیار بزرگ با دسترسی time-range یا tenant-based.
+‏- وقتی vacuum/maintenance یا index size عملکرد را خراب می‌کند.
+‏- partition pruning باید با query pattern هماهنگ باشد.
+‏- partitioning معجزه نیست؛ اگر query design بد باشد، مشکل باقی می‌ماند.
 
-3) چگونه migration بدون downtime انجام می‌دهی؟
-پاسخ:
-- backward-compatible migration: add nullable column/index concurrently.
-- deploy اپ سازگار با هر دو schema، backfill تدریجی، سپس switch.
-- در مرحله آخر cleanup/drop با پنجره امن.
-- rollback plan اجباری است (feature flag + dual-read/write در موارد حساس).
+‏3) چگونه migration بدون downtime انجام می‌دهی؟
+‏پاسخ:
+‏- backward-compatible migration: add nullable column/index concurrently.
+‏- deploy اپ سازگار با هر دو schema، backfill تدریجی، سپس switch.
+‏- در مرحله آخر cleanup/drop با پنجره امن.
+‏- rollback plan اجباری است (feature flag + dual-read/write در موارد حساس).
 
-4) چه زمانی read replica واقعاً مفید است؟
-پاسخ:
-- وقتی read-heavy workload داری و queryها قابل انتقال هستند.
-- برای analytic/read endpointهای non-critical consistency مفید است.
-- lag replica روی سناریوهای near-real-time می‌تواند مشکل‌ساز شود.
-- replica جایگزین index/query optimization بد نیست؛ مکمل آن است.
+‏4) چه زمانی read replica واقعاً مفید است؟
+‏پاسخ:
+‏- وقتی read-heavy workload داری و queryها قابل انتقال هستند.
+‏- برای analytic/read endpointهای non-critical consistency مفید است.
+‏- lag replica روی سناریوهای near-real-time می‌تواند مشکل‌ساز شود.
+‏- replica جایگزین index/query optimization بد نیست؛ مکمل آن است.

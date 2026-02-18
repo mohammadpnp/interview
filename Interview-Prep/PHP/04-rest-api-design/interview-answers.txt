@@ -1,84 +1,84 @@
-پاسخ‌های کامل سوالات REST API Design
+‏پاسخ‌های کامل سوالات REST API Design
 
-بخش پایه
+‏بخش پایه
 
-1) تفاوت PUT و PATCH چیست؟
-پاسخ:
-- PUT جایگزینی کامل representation resource است.
-- PATCH به‌روزرسانی جزئی فیلدها را انجام می‌دهد.
-- PUT باید idempotent باشد.
-- PATCH هم ideally idempotent طراحی می‌شود اما به semantics operation بستگی دارد.
+‏1) تفاوت PUT و PATCH چیست؟
+‏پاسخ:
+‏- PUT جایگزینی کامل representation resource است.
+‏- PATCH به‌روزرسانی جزئی فیلدها را انجام می‌دهد.
+‏- PUT باید idempotent باشد.
+‏- PATCH هم ideally idempotent طراحی می‌شود اما به semantics operation بستگی دارد.
 
-2) چه زمانی 200 و چه زمانی 201 برمی‌گردانی؟
-پاسخ:
-- 201 برای create موفق با resource جدید (ترجیحا Location header).
-- 200 برای موفقیت عملیات read/update عمومی.
-- برای delete موفق معمولا 204 مناسب است.
-- ثبات این قرارداد برای کل API مهم است.
+‏2) چه زمانی 200 و چه زمانی 201 برمی‌گردانی؟
+‏پاسخ:
+‏- 201 برای create موفق با resource جدید (ترجیحا Location header).
+‏- 200 برای موفقیت عملیات read/update عمومی.
+‏- برای delete موفق معمولا 204 مناسب است.
+‏- ثبات این قرارداد برای کل API مهم است.
 
-3) pagination را چگونه طراحی می‌کنی؟
-پاسخ:
-- cursor-based برای dataset بزرگ/real-time بهتر از offset است.
-- metadata مثل next_cursor, has_more ارائه می‌شود.
-- limit معقول و max cap برای جلوگیری از abuse.
-- sorting پایدار شرط pagination درست است.
+‏3) pagination را چگونه طراحی می‌کنی؟
+‏پاسخ:
+‏- cursor-based برای dataset بزرگ/real-time بهتر از offset است.
+‏- metadata مثل next_cursor, has_more ارائه می‌شود.
+‏- limit معقول و max cap برای جلوگیری از abuse.
+‏- sorting پایدار شرط pagination درست است.
 
-بخش متوسط
+‏بخش متوسط
 
-1) API versioning را چگونه مدیریت می‌کنی؟
-پاسخ:
-- version در مسیر یا header با policy روشن.
-- breaking change فقط در نسخه جدید.
-- deprecation timeline و migration guide.
-- usage telemetry برای تصمیم حذف نسخه قدیم.
+‏1) API versioning را چگونه مدیریت می‌کنی؟
+‏پاسخ:
+‏- version در مسیر یا header با policy روشن.
+‏- breaking change فقط در نسخه جدید.
+‏- deprecation timeline و migration guide.
+‏- usage telemetry برای تصمیم حذف نسخه قدیم.
 
-2) idempotency key چیست و کجا لازم است؟
-پاسخ:
-- کلید یکتا برای تشخیص درخواست تکراری.
-- در عملیات create حساس مثل پرداخت/سفارش لازم است.
-- نتیجه request اولیه ذخیره می‌شود و درخواست تکراری همان نتیجه می‌گیرد.
-- window زمانی نگهداری کلید باید تعریف شود.
+‏2) idempotency key چیست و کجا لازم است؟
+‏پاسخ:
+‏- کلید یکتا برای تشخیص درخواست تکراری.
+‏- در عملیات create حساس مثل پرداخت/سفارش لازم است.
+‏- نتیجه request اولیه ذخیره می‌شود و درخواست تکراری همان نتیجه می‌گیرد.
+‏- window زمانی نگهداری کلید باید تعریف شود.
 
-3) استاندارد خطا در API شما چگونه است؟
-پاسخ:
-- payload یکنواخت: code, message, details, trace_id.
-- کدهای خطا پایدار و مستند.
-- تفکیک خطای کاربر از خطای سرور.
-- عدم افشای جزئیات داخلی امنیتی.
+‏3) استاندارد خطا در API شما چگونه است؟
+‏پاسخ:
+‏- payload یکنواخت: code, message, details, trace_id.
+‏- کدهای خطا پایدار و مستند.
+‏- تفکیک خطای کاربر از خطای سرور.
+‏- عدم افشای جزئیات داخلی امنیتی.
 
-4) چگونه از breaking change جلوگیری می‌کنی؟
-پاسخ:
-- contract-first design و review اجباری.
-- additive change strategy (field جدید optional).
-- contract test و consumer-driven test.
-- rollout تدریجی و deprecation مدیریت‌شده.
+‏4) چگونه از breaking change جلوگیری می‌کنی؟
+‏پاسخ:
+‏- contract-first design و review اجباری.
+‏- additive change strategy (field جدید optional).
+‏- contract test و consumer-driven test.
+‏- rollout تدریجی و deprecation مدیریت‌شده.
 
-بخش پیشرفته
+‏بخش پیشرفته
 
-1) برای موبایل و پنل ادمین یک API مشترک چطور طراحی می‌کنی؟
-پاسخ:
-- core resource مشترک با capability-based authorization.
-- projection/field filter برای نیاز هر client.
-- rate-limit و SLA جدا برای channelها.
-- اگر نیازها شدیدا متفاوت شد، BFF یا endpointهای اختصاصی منطقی است.
+‏1) برای موبایل و پنل ادمین یک API مشترک چطور طراحی می‌کنی؟
+‏پاسخ:
+‏- core resource مشترک با capability-based authorization.
+‏- projection/field filter برای نیاز هر client.
+‏- rate-limit و SLA جدا برای channelها.
+‏- اگر نیازها شدیدا متفاوت شد، BFF یا endpointهای اختصاصی منطقی است.
 
-2) security-first API design یعنی چه؟
-پاسخ:
-- authn/authz از ابتدا، نه بعدا.
-- input validation سخت‌گیرانه، output escaping، rate limiting.
-- secret handling امن، audit log، و threat model.
-- کمینه‌سازی attack surface در endpointها.
+‏2) security-first API design یعنی چه؟
+‏پاسخ:
+‏- authn/authz از ابتدا، نه بعدا.
+‏- input validation سخت‌گیرانه، output escaping، rate limiting.
+‏- secret handling امن، audit log، و threat model.
+‏- کمینه‌سازی attack surface در endpointها.
 
-3) چه زمانی GraphQL نسبت به REST مناسب‌تر است؟
-پاسخ:
-- وقتی UI نیاز داده متنوع و aggregation بالا دارد.
-- کاهش round-trip برای کلاینت‌های پیچیده.
-- اگر caching CDN ساده و endpoint محدود لازم است، REST بهتر است.
-- تصمیم باید product-driven باشد.
+‏3) چه زمانی GraphQL نسبت به REST مناسب‌تر است؟
+‏پاسخ:
+‏- وقتی UI نیاز داده متنوع و aggregation بالا دارد.
+‏- کاهش round-trip برای کلاینت‌های پیچیده.
+‏- اگر caching CDN ساده و endpoint محدود لازم است، REST بهتر است.
+‏- تصمیم باید product-driven باشد.
 
-4) چگونه قرارداد API را test و enforce می‌کنی؟
-پاسخ:
-- OpenAPI contract در repo و CI validation.
-- integration/contract test روی request/response واقعی.
-- backward compatibility check در PR.
-- mock/stub برای مصرف‌کننده‌ها در محیط توسعه.
+‏4) چگونه قرارداد API را test و enforce می‌کنی؟
+‏پاسخ:
+‏- OpenAPI contract در repo و CI validation.
+‏- integration/contract test روی request/response واقعی.
+‏- backward compatibility check در PR.
+‏- mock/stub برای مصرف‌کننده‌ها در محیط توسعه.
