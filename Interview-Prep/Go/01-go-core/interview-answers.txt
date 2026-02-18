@@ -1,0 +1,112 @@
+پاسخ‌های کامل سوالات Go Core
+
+بخش پایه
+
+1) تفاوت array و slice چیست و impact آن روی performance چطور است؟
+پاسخ:
+- Array اندازه ثابت و بخشی از نوع است (`[4]int` با `[5]int` فرق دارد). مقداردهی/ارسال array معمولا کپی کامل می‌کند.
+- Slice یک view روی array است (pointer + len + cap). هنگام پاس دادن slice خود هدر کپی می‌شود اما داده زیرین مشترک می‌ماند.
+- از نظر performance: array برای سایز کوچک و ثابت می‌تواند cache-friendly باشد، ولی در عمل اکثر APIها slice می‌گیرند چون انعطاف رشد و برش دارند.
+- نکته مصاحبه‌ای: append ممکن است reallocation بدهد و pointer قبلی را invalid کند؛ پس در concurrent scenario باید مراقب اشتراک underlying array باشید.
+
+2) defer چه زمانی اجرا می‌شود و چه هزینه‌ای دارد؟
+پاسخ:
+- defer در لحظه return از همان function اجرا می‌شود (LIFO). حتی هنگام panic هم deferها اجرا می‌شوند.
+- بهترین کاربرد: آزادسازی resource (close file, unlock mutex, finish span).
+- هزینه دارد (در مسیر hot ممکن است measurable باشد)، پس در loopهای بسیار سنگین بهتر است با دقت استفاده شود یا refactor انجام شود.
+- نکته: آرگومان defer همان لحظه evaluate می‌شود، نه هنگام execution.
+
+3) تفاوت panic و error چیست؟
+پاسخ:
+- error مسیر کنترل‌شده خطاست و باید propagate/handle شود.
+- panic برای شرایط غیرقابل ادامه (programmer bug، invariant شکسته) است.
+- در backend production، panic باید در مرز process/request recover شود و log کامل تولید شود.
+- rule عملی: business failure با error، corruption/invariant failure با panic.
+
+4) interface{} در Go جدید چه جایگزین‌هایی دارد؟
+پاسخ:
+- از `any` استفاده می‌شود که alias خواناتر `interface{}` است.
+- برای type-safe abstraction بهتر است interfaceهای کوچک و مشخص تعریف شوند.
+- برای generic behavior، Generics ترجیح دارد تا castهای runtime کم شود.
+- استفاده زیاد از any نشانه design مبهم API است.
+
+5) init() چه زمانی مناسب است و چه زمانی ضدالگو است؟
+پاسخ:
+- مناسب برای setup ضروری و deterministic مثل register کردن codec یا parse config ثابت.
+- نامناسب وقتی side-effect پنهان، I/O سنگین یا وابستگی نامشخص ایجاد کند.
+- anti-pattern رایج: logic اصلی اپ در init پراکنده شود و تست‌پذیری را خراب کند.
+- بهترین حالت: init سبک، setup اصلی در main/bootstrap واضح.
+
+بخش متوسط
+
+1) چه زمانی pointer receiver بهتر از value receiver است؟
+پاسخ:
+- وقتی method state را تغییر می‌دهد.
+- وقتی struct بزرگ است و کپی پرهزینه می‌شود.
+- وقتی باید روی shared object رفتار یکنواخت داشته باشی.
+- اگر receiverها mix شوند، رفتار interface satisfaction می‌تواند گیج‌کننده شود؛ معمولا consistency در یک نوع رعایت می‌شود.
+
+2) چگونه wrapping error به debugging کمک می‌کند؟
+پاسخ:
+- هر لایه context خود را اضافه می‌کند: `open user file: %w`، `parse profile: %w`.
+- root cause حفظ می‌شود و با `errors.Is/As` قابل تشخیص باقی می‌ماند.
+- در incident، stack context چندمرحله‌ای سرعت root-cause را بالا می‌برد.
+- بدون wrap، خطاهای مشابه از هم تفکیک‌ناپذیر می‌شوند.
+
+3) design یک package تمیز در Go چه اصولی دارد؟
+پاسخ:
+- API کوچک، نام‌گذاری شفاف، وابستگی کم.
+- expose حداقل type/function لازم، بقیه internal/private.
+- عدم نشت جزئیات زیرساخت (مثلا SQL driver) به لایه‌های بالاتر.
+- تست مستقل package بدون boot کل سیستم.
+
+4) چگونه از import cycle جلوگیری می‌کنید؟
+پاسخ:
+- dependency direction یک‌طرفه تعریف کن (domain <- app <- adapters).
+- interface را در consumer تعریف کن، implementation را پایین نگه دار.
+- utility مشترک واقعی را package مجزا کن، نه dumping-ground.
+- cycle نشانه boundary نامشخص است؛ معماری را بازنگری کن نه workaround.
+
+5) تفاوت nil slice و empty slice در JSON output چیست؟
+پاسخ:
+- nil slice معمولا `null` serialize می‌شود، empty slice به شکل `[]`.
+- در API contract باید یکی را استاندارد کنی؛ اغلب برای کلاینت بهتر است `[]` برگردد.
+- هنگام مقایسه تستی، nil و empty برابر رفتاری نیستند.
+- با `make([]T,0)` یا custom marshalling می‌توان خروجی را کنترل کرد.
+
+بخش پیشرفته
+
+1) در چه شرایطی استفاده از sync.Pool منطقی است؟
+پاسخ:
+- برای objectهای موقتی پرتکرار که allocation/GC فشار ایجاد می‌کند.
+- وقتی object lifecycle کوتاه و reuse safe باشد.
+- نباید برای state مهم/بلندمدت استفاده شود چون pool تضمین نگهداری ندارد.
+- قبل از استفاده، با pprof نشان بده bottleneck واقعا allocation است.
+
+2) escape analysis چیست و چطور روی GC اثر می‌گذارد؟
+پاسخ:
+- کامپایلر تشخیص می‌دهد مقدار روی stack بماند یا به heap escape کند.
+- escape بیشتر یعنی heap allocation بیشتر و فشار GC بالاتر.
+- الگوهای رایج escape: return pointer به local، interface boxing، closure capture.
+- با `-gcflags='-m'` می‌توان دلایل escape را دید و refactor کرد.
+
+3) چگونه memory allocation را در سرویس پرترافیک کاهش می‌دهید؟
+پاسخ:
+- preallocate slice/map بر اساس ظرفیت تخمینی.
+- reuse buffer (با احتیاط) و کاهش تبدیل‌های غیرضروری string/byte.
+- جلوگیری از object creation در hot path، استفاده از streaming به جای load کامل.
+- اندازه‌گیری با benchmark + pprof قبل/بعد و جلوگیری از micro-optimization کور.
+
+4) چه زمانی Generics ارزش افزوده دارد و چه زمانی پیچیدگی اضافه می‌کند؟
+پاسخ:
+- ارزشمند وقتی abstraction تکراری واقعی داری (collection helper، cache wrapper type-safe).
+- بی‌فایده وقتی فقط برای «تمیزی ظاهری» به‌کار می‌رود و خوانایی را کم می‌کند.
+- اگر API نهایی پیچیده‌تر از نسخه non-generic شود، اغلب تصمیم اشتباه است.
+- معیار: کاهش duplication بدون کاهش وضوح.
+
+5) یک مثال واقعی از bug ناشی از interface design بد بزنید.
+پاسخ:
+- مثال رایج: interface خیلی بزرگ `UserRepository` با 12 متد در لایه بالا. mock و پیاده‌سازی‌ها brittle می‌شوند.
+- تغییر یک متد کوچک چند سرویس را می‌شکند.
+- اصلاح: شکستن به interfaceهای رفتاری کوچک (`UserReader`, `UserWriter`) و تعریف در consumer.
+- نتیجه: تست‌ها پایدارتر، coupling کمتر، refactor ارزان‌تر.

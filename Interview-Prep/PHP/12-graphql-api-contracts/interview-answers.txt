@@ -1,0 +1,84 @@
+پاسخ‌های کامل سوالات GraphQL + API Contracts (PHP)
+
+بخش پایه
+
+1) GraphQL چه مشکل APIهای REST را حل می‌کند؟
+پاسخ:
+- over-fetch/under-fetch را کاهش می‌دهد.
+- client در یک query داده‌های ترکیبی می‌گیرد.
+- iteration سریع‌تر برای UI پیچیده.
+- هزینه آن افزایش پیچیدگی resolver و امنیت است.
+
+2) resolver چیست؟
+پاسخ:
+- تابعی که مقدار field/query را برمی‌گرداند.
+- می‌تواند از DB، cache یا سرویس خارجی داده جمع کند.
+- طراحی ضعیف resolver منجر به N+1 و latency بالا می‌شود.
+- باید small, testable, observable باشد.
+
+3) N+1 query در GraphQL یعنی چه؟
+پاسخ:
+- به‌جای یک batch query، برای هر item query جدا اجرا شود.
+- هزینه read ناگهانی بالا می‌رود.
+- DataLoader/batching راه‌حل استاندارد است.
+- باید با metrics query count پایش شود.
+
+بخش متوسط
+
+1) چگونه authorization را در GraphQL enforce می‌کنی؟
+پاسخ:
+- auth context user در ابتدای request ساخته می‌شود.
+- authz در resolver/field policy بررسی می‌شود.
+- دسترسی جزئی با null/error policy مدیریت می‌شود.
+- audit روی عملیات حساس ضروری است.
+
+2) query complexity limit را چطور تعیین می‌کنی؟
+پاسخ:
+- مدل هزینه برای fieldها تعریف می‌کنم.
+- سقف depth/nodes/time تنظیم می‌کنم.
+- بر اساس رفتار واقعی کلاینت، threshold tune می‌شود.
+- queryهای سنگین نیازمند allowlist یا approval می‌شوند.
+
+3) cache در GraphQL چه چالش‌هایی دارد؟
+پاسخ:
+- تنوع زیاد query shape، cache key را سخت می‌کند.
+- permission-based response می‌تواند cache leakage بسازد.
+- invalidation پیچیده‌تر از REST endpoint ثابت است.
+- راهکار: cache لایه resolver + persisted query.
+
+4) schema evolution بدون breaking change چگونه است؟
+پاسخ:
+- افزودن field optional و deprecate تدریجی field قدیمی.
+- حذف مستقیم ممنوع تا مصرف‌کننده‌ها migrate شوند.
+- telemetry usage برای تصمیم حذف.
+- contract policy باید تیمی enforce شود.
+
+بخش پیشرفته
+
+1) یک GraphQL layer روی سرویس‌های موجود چطور اضافه می‌کنی؟
+پاسخ:
+- gateway schema طراحی و resolverها به سرویس‌های فعلی map می‌شوند.
+- batching/cache برای جلوگیری از call explosion.
+- timeout/circuit-breaker روی call پایین‌دستی.
+- rollout تدریجی ابتدا read-only endpoints.
+
+2) اگر latency GraphQL زیاد شد، چه گام‌هایی برمی‌داری؟
+پاسخ:
+- tracing per resolver و query profiling.
+- رفع N+1، cache hot fields، reduce fan-out.
+- complexity policy سخت‌گیرانه‌تر.
+- schema/query refactor با توجه به access pattern واقعی.
+
+3) contract testing برای GraphQL چگونه پیاده می‌شود؟
+پاسخ:
+- schema snapshot/version check در CI.
+- tests برای queryهای کلیدی کلاینت.
+- backward compatibility rule enforcement.
+- mocking dependency برای deterministic test.
+
+4) چه زمانی GraphQL برای تیم شما انتخاب اشتباه است؟
+پاسخ:
+- domain ساده و endpointهای محدود دارید.
+- تیم تجربه کافی در operability GraphQL ندارد.
+- نیاز caching CDN ساده و predictable است.
+- هزینه نگهداری از منفعت بیشتر شود.

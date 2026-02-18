@@ -1,0 +1,84 @@
+پاسخ‌های کامل سوالات System Design + Network (Go)
+
+بخش پایه
+
+1) در طراحی سیستم چه سوالاتی اول می‌پرسی؟
+پاسخ:
+- هدف کسب‌وکار، SLA/SLO، حجم ترافیک، الگوی read/write.
+- محدودیت latency، consistency، security، compliance.
+- failure scenario و نیاز به auditability.
+- roadmap رشد 6-12 ماه آینده.
+
+2) تفاوت horizontal و vertical scaling چیست؟
+پاسخ:
+- vertical: قوی‌تر کردن یک نود (CPU/RAM بیشتر).
+- horizontal: اضافه‌کردن نود بیشتر.
+- horizontal معمولا HA و elasticity بهتری می‌دهد اما پیچیدگی distributed بالا می‌رود.
+- اغلب ترکیب هر دو استفاده می‌شود.
+
+3) connection pooling چه مشکلی را حل می‌کند؟
+پاسخ:
+- هزینه ساخت connection جدید را کاهش می‌دهد.
+- latency و فشار handshake را کم می‌کند.
+- کنترل همزمانی به DB/خدمات بیرونی می‌دهد.
+- pool misconfig می‌تواند starvation یا overload بسازد.
+
+بخش متوسط
+
+1) چگونه API را idempotent طراحی می‌کنی؟
+پاسخ:
+- idempotency key یا resource id پایدار تعریف می‌کنم.
+- عملیات تکراری همان نتیجه را برگرداند و side-effect جدید نسازد.
+- ذخیره نتیجه قبلی با TTL و status.
+- برای پرداخت/سفارش این موضوع حیاتی است.
+
+2) cache aside pattern را توضیح بده.
+پاسخ:
+- read: اول cache، در miss از DB و سپس populate cache.
+- write: DB به‌روزرسانی و سپس invalidate/update cache.
+- ساده و رایج است ولی invalidation چالش اصلی است.
+- key design، TTL و stampede control باید دقیق باشد.
+
+3) چگونه از thundering herd جلوگیری می‌کنی؟
+پاسخ:
+- jitter در TTL، singleflight lock، request coalescing.
+- warm cache برای keyهای داغ.
+- rate-limit روی مسیر rebuild.
+- degradation path برای حفظ availability.
+
+4) برای rate limiting چه گزینه‌هایی داری؟
+پاسخ:
+- token bucket، leaky bucket، fixed/sliding window.
+- پیاده‌سازی per-user/per-IP/per-api-key بسته به use-case.
+- storage می‌تواند local memory یا Redis distributed باشد.
+- خطا باید semantic و retry-after روشن داشته باشد.
+
+بخش پیشرفته
+
+1) طراحی سرویس سفارش با تضمین عدم ثبت تکراری را توضیح بده.
+پاسخ:
+- API با idempotency key + unique constraint در DB.
+- workflow چندمرحله‌ای با state machine (created, reserved, paid, failed).
+- publish event از outbox بعد از commit.
+- reconciliation job برای موارد edge و observability کامل.
+
+2) در network partition چه رفتارهایی انتظار داری؟
+پاسخ:
+- timeout زیاد، retry storm، inconsistency موقت بین نودها.
+- بسته به طراحی CAP، یا availability افت می‌کند یا consistency.
+- circuit breaker و fallback و queue buffering کمک می‌کند.
+- playbook عملیاتی باید failover و traffic shaping داشته باشد.
+
+3) چه زمانی eventual consistency را می‌پذیری؟
+پاسخ:
+- وقتی latency/availability مهم‌تر از لحظه‌ای بودن consistency است.
+- سناریوهایی مثل feed/search/analytics.
+- برای داده مالی بحرانی معمولاً strong consistency لازم است.
+- باید window inconsistency و روش جبران مشخص باشد.
+
+4) یک سناریو طراحی کن که write-heavy است و رشد سریع دارد.
+پاسخ:
+- ingress API stateless + queue ingestion.
+- write path با partitioning/sharding تدریجی.
+- read model جدا (CQRS سبک) + cache.
+- observability و auto-scale و backpressure از ابتدا طراحی شود.

@@ -1,0 +1,84 @@
+پاسخ‌های کامل سوالات Message Queues (Go)
+
+بخش پایه
+
+1) queue چه مشکلی را حل می‌کند؟
+پاسخ:
+- decoupling producer/consumer و جذب spike.
+- امکان async processing برای کارهای زمان‌بر.
+- بهبود پایداری با retry مستقل از مسیر synchronous.
+- trade-off: پیچیدگی consistency و عملیات.
+
+2) تفاوت pub/sub و queue چیست؟
+پاسخ:
+- queue: هر پیام معمولا توسط یک consumer از یک گروه پردازش می‌شود.
+- pub/sub: پیام به چند subscriber مستقل می‌رسد.
+- انتخاب وابسته به نیاز fan-out و semantics processing است.
+- بعضی brokerها هر دو مدل را با abstraction متفاوت ارائه می‌دهند.
+
+3) چرا idempotency برای consumer مهم است؟
+پاسخ:
+- در at-least-once duplicate delivery طبیعی است.
+- بدون idempotency side effect دوباره اجرا می‌شود (مثلا دوبار کسر موجودی).
+- کلید یکتا/وضعیت پردازش باید نگهداری شود.
+- idempotency باید در مرز business operation enforce شود.
+
+بخش متوسط
+
+1) چگونه retry policy طراحی می‌کنی؟
+پاسخ:
+- دسته‌بندی خطا: transient vs permanent.
+- exponential backoff + jitter + max attempts.
+- بعد از سقف تلاش، ارسال به DLQ.
+- observability روی retry علت‌ها برای بهبود ریشه‌ای.
+
+2) DLQ چیست و چه زمانی استفاده می‌شود؟
+پاسخ:
+- صفی برای پیام‌هایی که با retry هم قابل پردازش نیستند.
+- جلوگیری از گیرکردن جریان اصلی.
+- پیام DLQ باید triage/replay tool داشته باشد.
+- DLQ بدون فرآیند رسیدگی فقط انباشت مشکل است.
+
+3) message ordering را چگونه مدیریت می‌کنی؟
+پاسخ:
+- ordering سراسری گران است؛ معمولا per-key/partition حفظ می‌شود.
+- key انتخابی باید مطابق invariant business باشد (مثلا order_id).
+- consumer concurrency باید با requirement ترتیب هماهنگ شود.
+- design باید نسبت به out-of-order tolerant باشد.
+
+4) چه زمانی async processing بدتر از sync است؟
+پاسخ:
+- وقتی پاسخ فوری و قطعی لازم است.
+- وقتی تیم و ابزار operability برای queue ندارد.
+- وقتی پیچیدگی eventual consistency ارزش کسب‌وکار ندارد.
+- گاهی sync ساده‌تر، قابل‌فهم‌تر و کم‌ریسک‌تر است.
+
+بخش پیشرفته
+
+1) outbox pattern را با مثال واقعی توضیح بده.
+پاسخ:
+- در همان transaction DB هم business row نوشته می‌شود هم outbox event.
+- publisher جدا outbox را می‌خواند و به broker می‌فرستد.
+- از دوگانگی «DB commit شد ولی event publish نشد» جلوگیری می‌کند.
+- برای سفارش: OrderCreated در outbox بعد از commit منتشر می‌شود.
+
+2) چگونه lag مصرف‌کننده را کاهش می‌دهی؟
+پاسخ:
+- scale consumer group، بهینه‌سازی handler، batch processing.
+- حذف callهای کند synchronous در handler.
+- tuning partition/parallelism.
+- backpressure upstream و visibility روی lag per partition.
+
+3) برای پیام‌های poison چه strategy داری؟
+پاسخ:
+- تشخیص سریع (same payload failing repeatedly).
+- توقف retry بی‌پایان و انتقال به DLQ.
+- tagging علت و ابزار replay بعد از fix.
+- در صورت نیاز quarantine topic برای تحلیل امن.
+
+4) چگونه integrity داده بین DB و broker را تضمین نسبی می‌دهی؟
+پاسخ:
+- outbox/inbox + idempotent consumer.
+- checkpoint و audit table برای traceability.
+- reconciliation دوره‌ای بین state DB و event log.
+- exactly-once کامل نادر است؛ هدف عملی «effectively once» است.

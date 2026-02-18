@@ -1,0 +1,84 @@
+پاسخ‌های کامل سوالات CI/CD + Release Engineering (Go)
+
+بخش پایه
+
+1) CI و CD چه تفاوتی دارند؟
+پاسخ:
+- CI یعنی ادغام مکرر کد با build/test خودکار.
+- CD یعنی تحویل خودکار تا مرحله release/deploy.
+- CI بدون CD سرعت deploy را محدود می‌کند.
+- CD بدون CI پایدار، ریسک release را بالا می‌برد.
+
+2) quality gate چیست؟
+پاسخ:
+- مجموعه شرط‌های اجباری قبل merge/release (lint, test, scan).
+- جلوگیری از ورود تغییرات پرریسک به main/prod.
+- gate باید واضح و قابل‌اعتماد باشد، نه flaky.
+- استثناها باید ثبت‌شده و زمان‌دار باشند.
+
+3) canary deployment چه مزیتی دارد؟
+پاسخ:
+- نسخه جدید را ابتدا به درصد کمی از ترافیک می‌دهد.
+- اثر واقعی روی metricها دیده می‌شود.
+- در صورت مشکل، rollback کم‌هزینه‌تر است.
+- برای سرویس حساس، safer از big-bang rollout است.
+
+بخش متوسط
+
+1) اگر build سریع ولی flaky باشد چه می‌کنی؟
+پاسخ:
+- flaky tests را شناسایی، quarantine و ریشه‌یابی می‌کنم.
+- منابع nondeterministic (time, network, shared state) حذف می‌شوند.
+- metrics ثبات pipeline (pass rate) مانیتور می‌شود.
+- هدف: اعتماد تیم به CI؛ flakiness اعتماد را نابود می‌کند.
+
+2) چه تست‌هایی باید بلوکه‌کننده release باشند؟
+پاسخ:
+- unit/critical integration tests.
+- security scan حیاتی و contract testهای اصلی.
+- smoke test بعد deploy برای rollback gate.
+- تست‌های کند غیرحیاتی می‌توانند async باشند.
+
+3) rollback خودکار را چگونه طراحی می‌کنی؟
+پاسخ:
+- تعریف clear SLO breach threshold (error rate/p99).
+- health check و metrics ارزیابی در بازه کوتاه پس از rollout.
+- در breach، rollback نسخه قبلی + alert فوری.
+- rollout progressive برای کاهش blast radius.
+
+4) چه معیارهایی نشان می‌دهد pipeline سالم است؟
+پاسخ:
+- lead time پایین و پایدار.
+- change failure rate پایین.
+- MTTR کوتاه.
+- pass rate بالا بدون flakiness و manual intervention کم.
+
+بخش پیشرفته
+
+1) یک strategy release برای سرویس mission-critical طراحی کن.
+پاسخ:
+- feature flag + canary چندمرحله‌ای + automated guardrails.
+- deployment window و on-call آماده.
+- rollback فوری و playbook از پیش تست‌شده.
+- post-deploy validation شامل technical + business KPIs.
+
+2) چگونه وابستگی migration دیتابیس با release app را مدیریت می‌کنی؟
+پاسخ:
+- expand-contract migration strategy.
+- app جدید باید با schema قدیم/جدید سازگار باشد.
+- destructive migration به فاز پایانی و بعد از اطمینان usage منتقل می‌شود.
+- rollout stage-wise با check migration lag.
+
+3) اگر بعد از deploy فقط p99 خراب شود، چه تصمیمی می‌گیری؟
+پاسخ:
+- اگر از budget خارج شود rollback می‌کنم حتی اگر average خوب باشد.
+- trace endpointهای tail-heavy و dependency hotspots را تحلیل می‌کنم.
+- ممکن است canary percentage را کاهش دهم و اصلاح incremental انجام دهم.
+- تصمیم باید SLO-driven باشد نه احساسی.
+
+4) branch strategy مناسب تیم backend چندنفره چیست؟
+پاسخ:
+- trunk-based با feature flag برای جریان سریع و conflict کمتر.
+- branchهای کوتاه‌عمر و PR کوچک.
+- release branch فقط برای نیازهای خاص enterprise.
+- discipline در code review و CI gate شرط موفقیت است.
