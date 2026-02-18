@@ -1,0 +1,86 @@
+<div dir="rtl" align="right">
+پاسخ‌های کامل سوالات Elasticsearch (Go)
+
+بخش پایه
+
+1) تفاوت text و keyword چیست؟
+پاسخ:
+- `text` برای full-text است و analyze/tokenize می‌شود.
+- `keyword` برای فیلتر دقیق، aggregation، sorting است.
+- فیلد اشتباه باعث نتایج غلط یا query کند می‌شود.
+- معمولا یک فیلد با multi-field هر دو نوع را دارد.
+
+2) Elasticsearch چه زمانی انتخاب بهتری از SQL LIKE است؟
+پاسخ:
+- وقتی full-text ranking، typo tolerance، stemming/analyzer می‌خواهی.
+- روی dataset بزرگ، search relevance مهم‌تر از match ساده است.
+- LIKE برای جستجوی ساده محدود است و در scale سنگین می‌شود.
+- ES مکمل DB است، نه جایگزین کامل transaction store.
+
+3) shard و replica چه نقشی دارند؟
+پاسخ:
+- shard برای تقسیم داده و scale افقی.
+- replica برای availability و افزایش throughput خواندن.
+- shard زیاد مدیریت و memory overhead را بالا می‌برد.
+- sizing باید بر اساس data growth و query pattern باشد.
+
+بخش متوسط
+
+1) mapping اشتباه چه مشکلی ایجاد می‌کند؟
+پاسخ:
+- query semantics اشتباه می‌شود (match/filter نامعتبر).
+- storage و index size بی‌جهت رشد می‌کند.
+- performance degrade می‌شود و گاهی reindex اجباری می‌شود.
+- mapping governance قبل از ingest ضروری است.
+
+2) analyzer سفارشی را چه زمانی نیاز داریم؟
+پاسخ:
+- برای زبان/دامنه خاص (فارسی، نام محصول، کدها).
+- وقتی analyzer پیش‌فرض relevance کافی نمی‌دهد.
+- custom tokenizer/filter می‌تواند precision/recall را بهتر کند.
+- باید با dataset واقعی ارزیابی شود، نه فرضی.
+
+3) چگونه sort و filter را با full-text ترکیب می‌کنی؟
+پاسخ:
+- text search در `must` و filterهای دقیق در `filter` clause.
+- sort روی فیلد keyword/numeric/date انجام می‌شود.
+- function score یا boosting برای business ranking.
+- page deep با search_after بهتر از from/size خیلی بزرگ.
+
+4) strategy همگام‌سازی ES با DB چیست؟
+پاسخ:
+- outbox/CDC/event مصرف‌شده توسط indexer.
+- idempotent upsert/delete با version/checkpoint.
+- retry + DLQ برای خطاهای موقت/دائمی.
+- reconciliation job دوره‌ای برای drift detection.
+
+بخش پیشرفته
+
+1) برای index بسیار بزرگ چه ILM strategy پیشنهاد می‌دهی؟
+پاسخ:
+- hot-warm-cold tiers بر اساس الگوی دسترسی.
+- rollover بر اساس size/time.
+- retention و snapshot policy مشخص.
+- force merge در فاز archive با دقت هزینه/زمان.
+
+2) چگونه relevance را برای نتایج جستجوی فارسی بهبود می‌دهی؟
+پاسخ:
+- نرمال‌سازی کاراکترها (ی/ک، نیم‌فاصله).
+- analyzer مناسب فارسی + synonym domain-specific.
+- boosting فیلدهای مهم (title>description).
+- ارزیابی آفلاین با query set واقعی و A/B آنلاین.
+
+3) reindex بدون downtime چطور انجام می‌شود؟
+پاسخ:
+- index جدید با mapping جدید بساز.
+- داده را backfill کن و همزمان dual-write یا catch-up event داشته باش.
+- alias read/write را اتمیک switch کن.
+- بعد از verify، index قبلی حذف/آرشیو شود.
+
+4) اگر cluster در فشار سنگین باشد، چه تنظیماتی را بررسی می‌کنی؟
+پاسخ:
+- heap usage, GC, thread pool rejection, disk I/O.
+- shard allocation و skew nodeها.
+- queryهای expensive و cardinality aggregation سنگین.
+- refresh/replica/shard count tuning + scaling عملیاتی.
+</div>

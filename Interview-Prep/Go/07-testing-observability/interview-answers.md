@@ -1,0 +1,86 @@
+<div dir="rtl" align="right">
+پاسخ‌های کامل سوالات Testing + Observability (Go)
+
+بخش پایه
+
+1) تفاوت Unit و Integration test چیست؟
+پاسخ:
+- Unit test منطق کوچک و isolated را سریع و deterministic بررسی می‌کند.
+- Integration test تعامل واقعی با DB/queue/http یا بخشی از آن را بررسی می‌کند.
+- Unit برای سرعت بازخورد، Integration برای کشف mismatchهای واقعی ضروری است.
+- هر دو مکمل هم هستند؛ هیچ‌کدام به‌تنهایی کافی نیست.
+
+2) چرا بعضی تست‌ها flaky می‌شوند؟
+پاسخ:
+- وابستگی به زمان، concurrency race، shared state، order dependency.
+- external dependency ناپایدار یا data cleanup ناقص.
+- random seed بدون کنترل.
+- درمان: isolation، deterministic clock، retry در تست ممنوع مگر diagnostic.
+
+3) benchmark در Go چه زمانی استفاده می‌شود؟
+پاسخ:
+- وقتی تصمیم performance داریم (قبل/بعد refactor, data structure choice).
+- برای اندازه‌گیری allocation و ns/op.
+- benchmark باید representative و پایدار باشد.
+- microbenchmark بدون context production می‌تواند گمراه‌کننده باشد.
+
+بخش متوسط
+
+1) چطور تصمیم می‌گیری چه چیزی mock شود؟
+پاسخ:
+- dependency بیرونی کند/ناپایدار/گران mock می‌شود (DB, network).
+- منطق داخلی ساده ترجیحا mock نشود تا تست brittle نشود.
+- behavior مهم را verify کن، نه جزئیات implementation.
+- fake implementation گاهی از mock framework بهتر است.
+
+2) TDD در backend چه مزایا و محدودیت‌هایی دارد؟
+پاسخ:
+- مزایا: design بهتر API، regression کمتر، confidence بالاتر.
+- محدودیت: برای exploratory code یا integration پیچیده ابتدا spike لازم است.
+- رویکرد عملی: TDD برای منطق حساس، test-after برای glue code ساده.
+- معیار موفقیت، کیفیت design و bug rate است نه ritual.
+
+3) چه metricهایی را برای API حیاتی مانیتور می‌کنی؟
+پاسخ:
+- latency (p50/p95/p99)، error rate، throughput.
+- saturation (CPU/memory/connection pool/queue depth).
+- dependency health (DB latency, cache hit ratio).
+- business metric کلیدی (مثلا success checkout).
+
+4) log خوب چه ویژگی‌هایی دارد؟
+پاسخ:
+- structured، قابل جستجو، سطح‌بندی‌شده (info/warn/error).
+- correlation id/trace id برای اتصال رویدادها.
+- پیام actionable، بدون noise و بدون نشت secret.
+- برای هر خطا context کافی (request key data) ارائه شود.
+
+بخش پیشرفته
+
+1) اگر p99 latency بالا رفت ولی average خوب بود، چطور تحلیل می‌کنی؟
+پاسخ:
+- average tail را پنهان می‌کند؛ باید توزیع و outlierها بررسی شوند.
+- مسیرهای کند (query خاص، dependency کند، GC pause) را با trace پیدا می‌کنم.
+- همبستگی با حجم ترافیک و نوع endpoint/tenant را بررسی می‌کنم.
+- سپس targeted fix روی hotspot و guardrail برای جلوگیری از تکرار.
+
+2) چگونه یک incident را با tracing root-cause می‌کنی؟
+پاسخ:
+- traceهای fail/slow را فیلتر می‌کنم.
+- طولانی‌ترین span و خطای اولیه chain را پیدا می‌کنم.
+- با log/meter همان بازه correlation می‌گیرم.
+- patch سریع + postmortem + action item برای پیشگیری.
+
+3) چه زمانی coverage بالا گمراه‌کننده است؟
+پاسخ:
+- وقتی assertion ضعیف یا فقط line execution را می‌شمارد.
+- وقتی edge case مهم تست نشده اما درصد ظاهری بالاست.
+- وقتی testها به implementation detail قفل شده‌اند.
+- coverage را indicator می‌بینیم، نه هدف نهایی.
+
+4) چطور test suite سریع و پایدار نگه داشته می‌شود؟
+پاسخ:
+- تقسیم لایه‌ای تست‌ها و parallelization کنترل‌شده.
+- حذف وابستگی خارجی از unit test.
+- test data factory تمیز + teardown قابل اعتماد.
+- زمان اجرای هر suite monitor شود و regression performance test detect گردد.
+</div>

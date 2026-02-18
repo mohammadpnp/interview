@@ -1,0 +1,86 @@
+<div dir="rtl" align="right">
+پاسخ‌های کامل سوالات Cloud + CI/CD + Observability (PHP)
+
+بخش پایه
+
+1) چرا CI/CD برای تیم backend حیاتی است؟
+پاسخ:
+- تحویل سریع‌تر با ریسک کمتر.
+- خطاهای integration زودتر کشف می‌شوند.
+- release قابل‌تکرار و قابل‌ردیابی می‌شود.
+- کیفیت release به افراد خاص وابسته نمی‌ماند.
+
+2) تفاوت metric و log و trace چیست؟
+پاسخ:
+- metric: وضعیت عددی aggregate (latency/error rate).
+- log: رویداد متنی ساخت‌یافته با context.
+- trace: مسیر end-to-end یک request بین سرویس‌ها.
+- ترکیب هر سه برای triage سریع لازم است.
+
+3) SLO چه نقشی در عملیات روزانه دارد؟
+پاسخ:
+- هدف کمی reliability را مشخص می‌کند.
+- تصمیم release/rollback را objective می‌کند.
+- error budget تعادل سرعت و پایداری می‌سازد.
+- alerting معنادار بر پایه SLO تعریف می‌شود.
+
+بخش متوسط
+
+1) چطور alert خسته‌کننده (noisy) را کاهش می‌دهی؟
+پاسخ:
+- alert فقط روی symptom مهم و actionable.
+- threshold/time-window مناسب و deduplication.
+- حذف alertهای کم‌ارزش پس از بازبینی دوره‌ای.
+- runbook مرتبط با هر alert.
+
+2) چه زمانی canary بهتر از rolling است؟
+پاسخ:
+- وقتی ریسک release بالاست یا رفتار production حیاتی است.
+- برای مقایسه نسخه جدید با baseline در ترافیک واقعی.
+- rolling ساده‌تر است ولی blast radius بزرگ‌تری دارد.
+- canary نیازمند observability بالغ است.
+
+3) چگونه tracing را در Laravel سرویس فعال می‌کنی؟
+پاسخ:
+- instrumentation middleware و outbound client.
+- propagation trace context در header.
+- span برای DB/query/external call.
+- اتصال trace id به log برای correlation.
+
+4) چه شاخصی نشان می‌دهد release موفق بوده؟
+پاسخ:
+- عدم افزایش error rate و حفظ p95/p99.
+- ثبات resource saturation.
+- business KPI حفظ/بهبود یافته.
+- نبود alert بحرانی در پنجره post-deploy.
+
+بخش پیشرفته
+
+1) یک incident را با داده‌های observability root-cause کن.
+پاسخ:
+- ابتدا alert latency بالا.
+- trace نشان می‌دهد external payment span کند شده.
+- logها timeout spike را تایید می‌کنند.
+- mitigation: circuit breaker + fallback، سپس fix پایدار.
+
+2) اگر هزینه cloud بالا رفت اما ترافیک ثابت بود، چه بررسی می‌کنی؟
+پاسخ:
+- right-sizing و overprovisioning podها.
+- idle resource، log/trace retention پرهزینه.
+- query inefficiency یا cache miss rate بالا.
+- schedule/autoscale misconfiguration.
+
+3) strategy کامل برای release بدون downtime چیست؟
+پاسخ:
+- backward-compatible code+schema.
+- progressive rollout با health gates.
+- auto/manual rollback criteria.
+- post-release validation و freeze کوتاه برای پایش.
+
+4) چگونه reliability و سرعت delivery را همزمان حفظ می‌کنی؟
+پاسخ:
+- trunk-based + feature flags + strong CI gates.
+- SLO-driven decision making.
+- automation rollback و runbook آماده.
+- یادگیری مداوم از incident/postmortem.
+</div>
