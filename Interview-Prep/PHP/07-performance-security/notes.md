@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Performance + Security Notes (PHP)
 
 ## هدف
@@ -18,3 +19,4 @@
 
 ## تمرین سریع
 - یک endpoint حساس را با threat model ساده تحلیل کن.
+</div>

@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Cloud + IaC + GitOps Notes (Go)
 
 ## هدف
@@ -18,3 +19,4 @@
 
 ## تمرین سریع
 - یک سرویس Go را با Helm deploy کن و تغییر config را به‌صورت GitOps مدیریت کن.
+</div>

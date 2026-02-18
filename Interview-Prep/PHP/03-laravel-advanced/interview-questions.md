@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Laravel Advanced Interview Questions
 
 ## پایه
@@ -16,3 +17,4 @@
 2. چگونه consistency بین DB و queue را حفظ می‌کنی؟
 3. برای queue backlog شدید چه strategy داری؟
 4. چه زمانی event-driven به پیچیدگی غیرضروری تبدیل می‌شود؟
+</div>

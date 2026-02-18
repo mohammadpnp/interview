@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # الگوی رایج مصاحبه در شرکت‌هایی شبیه اسنپ
 
 ## تمرکز اصلی
@@ -22,3 +23,4 @@
 - پاسخ با اعداد تقریبی (QPS، p95 latency، حجم داده)
 - شفاف‌سازی Trade-offها
 - پیشنهاد Monitoring و Rollback Plan
+</div>

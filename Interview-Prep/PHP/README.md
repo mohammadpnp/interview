@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # PHP/Laravel Interview Track
 
 ## ترتیب مطالعه پیشنهادی
@@ -19,3 +20,4 @@
 هر پوشه شامل دو فایل است:
 - `notes.md`: درسنامه فشرده
 - `interview-questions.md`: سوالات مصاحبه (پایه، متوسط، پیشرفته)
+</div>

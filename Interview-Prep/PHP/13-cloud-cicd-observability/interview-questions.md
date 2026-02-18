@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Cloud + CI/CD + Observability Interview Questions (PHP Track)
 
 ## پایه
@@ -16,3 +17,4 @@
 2. اگر هزینه cloud بالا رفت اما ترافیک ثابت بود، چه بررسی می‌کنی؟
 3. strategy کامل برای release بدون downtime چیست؟
 4. چگونه reliability و سرعت delivery را همزمان حفظ می‌کنی؟
+</div>

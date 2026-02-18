@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # PHP Core + OOP Interview Questions
 
 ## پایه
@@ -17,3 +18,4 @@
 2. چگونه coupling بین moduleها را کاهش می‌دهی؟
 3. برای legacy PHP codebase چه strategy بهبود تدریجی داری؟
 4. چگونه backward compatibility را در releaseهای پیوسته حفظ می‌کنی؟
+</div>

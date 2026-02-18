@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Low-Latency + Realtime Patterns Notes (PHP)
 
 ## هدف
@@ -18,3 +19,4 @@
 
 ## تمرین سریع
 - یک flow اعلان لحظه‌ای با queue + websocket gateway طراحی کن.
+</div>

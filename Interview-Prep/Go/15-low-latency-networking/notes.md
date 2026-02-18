@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Low-Latency + Networking Notes (Go)
 
 ## هدف
@@ -18,3 +19,4 @@
 
 ## تمرین سریع
 - یک endpoint realtime را از REST polling به streaming ارتقا بده و benchmark بگیر.
+</div>

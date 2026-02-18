@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Docker + Kubernetes Notes (PHP)
 
 ## هدف
@@ -18,3 +19,4 @@
 
 ## تمرین سریع
 - Laravel app + queue worker را با Helm/manifest deploy کن.
+</div>

@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Elasticsearch Notes (Go Track)
 
 ## هدف
@@ -18,3 +19,4 @@
 
 ## تمرین سریع
 - یک ایندکس محصول با قابلیت autocomplete و فیلتر قیمت/برند طراحی کن.
+</div>

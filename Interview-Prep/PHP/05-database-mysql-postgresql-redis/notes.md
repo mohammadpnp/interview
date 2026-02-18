@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Database Notes (MySQL/PostgreSQL + Redis)
 
 ## هدف
@@ -18,3 +19,4 @@
 
 ## تمرین سریع
 - یک endpoint کند را با index و cache بهبود بده.
+</div>

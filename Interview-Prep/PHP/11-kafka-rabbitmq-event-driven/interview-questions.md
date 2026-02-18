@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Kafka + RabbitMQ Interview Questions (PHP Track)
 
 ## پایه
@@ -16,3 +17,4 @@
 2. اگر duplicate event زیاد شد چه می‌کنی؟
 3. strategy بازپخش eventهای از دست‌رفته چیست؟
 4. اگر backlog بسیار بزرگ شد، چه برنامه عملیاتی داری؟
+</div>

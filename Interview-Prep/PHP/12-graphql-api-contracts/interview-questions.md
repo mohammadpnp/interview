@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # GraphQL + API Contracts Interview Questions (PHP Track)
 
 ## پایه
@@ -16,3 +17,4 @@
 2. اگر latency GraphQL زیاد شد، چه گام‌هایی برمی‌داری؟
 3. contract testing برای GraphQL چگونه پیاده می‌شود؟
 4. چه زمانی GraphQL برای تیم شما انتخاب اشتباه است؟
+</div>

@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Database Interview Questions (PHP Track)
 
 ## پایه
@@ -16,3 +17,4 @@
 2. چگونه data consistency در workflow مالی حفظ می‌شود؟
 3. برای dataset بزرگ چه partition/sharding strategy داری؟
 4. چه زمانی read replica ارزش عملی دارد؟
+</div>

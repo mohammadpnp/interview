@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Testing + Quality Notes (PHP/Laravel)
 
 ## هدف
@@ -17,3 +18,4 @@
 
 ## تمرین سریع
 - برای یک ماژول حساس، unit + feature + integration تست بنویس.
+</div>

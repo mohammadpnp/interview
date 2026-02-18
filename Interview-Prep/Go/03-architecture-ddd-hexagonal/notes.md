@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Architecture Notes (DDD + Hexagonal)
 
 ## هدف
@@ -18,3 +19,4 @@
 
 ## تمرین سریع
 - یک use-case سفارش را با application service + repository interface مدل کن.
+</div>

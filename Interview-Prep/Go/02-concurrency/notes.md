@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Concurrency Notes (Go)
 
 ## هدف
@@ -20,3 +21,4 @@
 
 ## تمرین سریع
 - worker pool بنویس با context cancellation و retry محدود.
+</div>

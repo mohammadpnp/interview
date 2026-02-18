@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Kafka + RabbitMQ + Event-Driven Notes (Go)
 
 ## هدف
@@ -18,3 +19,4 @@
 
 ## تمرین سریع
 - یک جریان OrderCreated -> PaymentProcessed با outbox + idempotent consumer طراحی کن.
+</div>

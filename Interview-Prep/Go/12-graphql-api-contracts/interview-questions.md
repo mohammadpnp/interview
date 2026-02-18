@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # GraphQL + API Contracts Interview Questions (Go)
 
 ## پایه
@@ -16,3 +17,4 @@
 2. چگونه breaking change را در schema مدیریت می‌کنی؟
 3. strategy cache در GraphQL چیست؟
 4. اگر یک query سنگین latency را بالا ببرد، روند اصلاح چیست؟
+</div>

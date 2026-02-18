@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # نقشه تکنولوژی بازار (بر اساس آگهی‌های جابینجا/جاب‌ویژن)
 
 تاریخ جمع‌آوری: 2026-02-18
@@ -40,3 +41,4 @@
   - `12-graphql-api-contracts`
   - `13-cloud-cicd-observability`
   - `14-low-latency-realtime-patterns`
+</div>

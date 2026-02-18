@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Message Queues Notes (Go)
 
 ## هدف
@@ -18,3 +19,4 @@
 
 ## تمرین سریع
 - یک consumer با retry محدود + DLQ + idempotency key پیاده کن.
+</div>

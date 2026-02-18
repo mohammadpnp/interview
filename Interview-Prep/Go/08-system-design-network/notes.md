@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # System Design + Network Notes (Go)
 
 ## هدف
@@ -18,3 +19,4 @@
 
 ## تمرین سریع
 - طراحی high-level برای سفارش‌گیری با 50k RPM و SLA مشخص.
+</div>

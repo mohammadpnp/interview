@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Architecture Interview Questions
 
 ## پایه
@@ -16,3 +17,4 @@
 2. چگونه consistency بین چند aggregate را مدیریت می‌کنی؟
 3. در چه شرایطی event-driven domain مناسب‌تر است؟
 4. یک نمونه anti-corruption layer واقعی توضیح بده.
+</div>

@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Low-Latency + Realtime Interview Questions (PHP Track)
 
 ## پایه
@@ -16,3 +17,4 @@
 2. اگر بخشی از جریان realtime fail شد، recovery چطور انجام می‌شود؟
 3. strategy failover برای websocket gateway چیست؟
 4. چگونه consistency بین realtime event و state دیتابیس حفظ می‌شود؟
+</div>

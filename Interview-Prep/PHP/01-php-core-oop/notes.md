@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # PHP Core + OOP Notes
 
 ## هدف
@@ -18,3 +19,4 @@
 
 ## تمرین سریع
 - یک ماژول کوچک با interface + dependency inversion در PHP پیاده کن.
+</div>

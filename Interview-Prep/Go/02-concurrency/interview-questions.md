@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Concurrency Interview Questions
 
 ## پایه
@@ -19,3 +20,4 @@
 3. چگونه graceful shutdown برای چند goroutine هم‌زمان می‌سازی؟
 4. سناریویی بگو که lock-free approach مناسب‌تر از mutex باشد.
 5. چگونه latency tail را در workload concurrent کاهش می‌دهی؟
+</div>

@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # CI/CD + Release Engineering Notes (Go)
 
 ## هدف
@@ -18,3 +19,4 @@
 
 ## تمرین سریع
 - یک pipeline برای Go service بنویس با canary release و auto rollback.
+</div>

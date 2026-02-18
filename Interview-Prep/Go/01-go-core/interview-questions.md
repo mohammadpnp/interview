@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Go Core Interview Questions
 
 ## پایه
@@ -20,3 +21,4 @@
 3. چگونه memory allocation را در سرویس پرترافیک کاهش می‌دهید؟
 4. چه زمانی Generics ارزش افزوده دارد و چه زمانی پیچیدگی اضافه می‌کند؟
 5. یک مثال واقعی از bug ناشی از interface design بد بزنید.
+</div>

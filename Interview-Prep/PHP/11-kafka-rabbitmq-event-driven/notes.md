@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Kafka + RabbitMQ + Event-Driven Notes (PHP/Laravel)
 
 ## هدف
@@ -18,3 +19,4 @@
 
 ## تمرین سریع
 - یک Job consumer بنویس که idempotency key و DLQ strategy داشته باشد.
+</div>

@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # GraphQL + API Contracts Notes (PHP/Laravel)
 
 ## هدف
@@ -18,3 +19,4 @@
 
 ## تمرین سریع
 - یک schema برای profile + orders بساز و query پیچیده را optimize کن.
+</div>

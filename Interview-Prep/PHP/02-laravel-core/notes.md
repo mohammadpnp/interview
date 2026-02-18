@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Laravel Core Notes
 
 ## هدف
@@ -18,3 +19,4 @@
 
 ## تمرین سریع
 - یک endpoint CRUD با validation، policy و pagination تمیز بساز.
+</div>

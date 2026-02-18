@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Go Core Notes
 
 ## هدف
@@ -21,3 +22,4 @@
 ## تمرین سریع
 - یک package utility با interface کوچک و تست unit بنویس.
 - یک refactor انجام بده که panicهای غیرضروری را به error return تبدیل کند.
+</div>

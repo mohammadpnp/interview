@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # System Design + Network Interview Questions
 
 ## پایه
@@ -16,3 +17,4 @@
 2. در network partition چه رفتارهایی انتظار داری؟
 3. چه زمانی eventual consistency را می‌پذیری؟
 4. یک سناریو طراحی کن که write-heavy است و رشد سریع دارد.
+</div>

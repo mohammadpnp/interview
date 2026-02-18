@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Laravel Core Interview Questions
 
 ## پایه
@@ -17,3 +18,4 @@
 2. چطور یک ماژول domain-oriented در Laravel طراحی می‌کنی؟
 3. برای پروژه پرترافیک، کدام بخش Laravel bottleneck می‌شود؟
 4. چه زمانی Eloquent را کنار می‌گذاری و raw query می‌نویسی؟
+</div>

@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Cloud + IaC + GitOps Interview Questions (Go)
 
 ## پایه
@@ -16,3 +17,4 @@
 2. برای disaster recovery چه RTO/RPO هدف می‌گذاری و چرا؟
 3. چگونه امنیت pipeline زیرساخت را افزایش می‌دهی؟
 4. در outage ناشی از config اشتباه چه runbookی اجرا می‌کنی؟
+</div>

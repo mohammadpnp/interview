@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Database Notes (PostgreSQL + Redis)
 
 ## هدف
@@ -18,3 +19,4 @@
 
 ## تمرین سریع
 - یک query کند را با index و rewrite بهبود بده و قبل/بعد را اندازه بگیر.
+</div>

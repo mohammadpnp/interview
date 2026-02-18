@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Database Interview Questions (Go Track)
 
 ## پایه
@@ -16,3 +17,4 @@
 2. در چه سناریویی partitioning در PostgreSQL لازم می‌شود؟
 3. چگونه migration بدون downtime انجام می‌دهی؟
 4. چه زمانی read replica واقعاً مفید است؟
+</div>

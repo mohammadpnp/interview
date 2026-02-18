@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # GraphQL + API Contracts Notes (Go)
 
 ## هدف
@@ -18,3 +19,4 @@
 
 ## تمرین سریع
 - یک schema برای Order + User بنویس و N+1 را با DataLoader کنترل کن.
+</div>

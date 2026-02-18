@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # Laravel Advanced Notes
 
 ## هدف
@@ -18,3 +19,4 @@
 
 ## تمرین سریع
 - یک workflow سفارش با Job chain + retry + notification طراحی کن.
+</div>

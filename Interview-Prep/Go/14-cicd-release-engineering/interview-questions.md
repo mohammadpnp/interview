@@ -1,3 +1,4 @@
+<div dir="rtl" align="right">
 # CI/CD + Release Interview Questions (Go)
 
 ## پایه
@@ -16,3 +17,4 @@
 2. چگونه وابستگی migration دیتابیس با release app را مدیریت می‌کنی؟
 3. اگر بعد از deploy فقط p99 خراب شود، چه تصمیمی می‌گیری؟
 4. branch strategy مناسب تیم backend چندنفره چیست؟
+</div>
