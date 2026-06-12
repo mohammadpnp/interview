@@ -1,0 +1,34 @@
+html,
+body,
+.vscode-body,
+.markdown-body {
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: plaintext !important;
+}
+
+p,
+li,
+blockquote,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+pre,
+code,
+kbd,
+samp,
+table,
+.hljs,
+.code-line code,
+.token {
+  direction: ltr !important;
+  text-align: left !important;
+  unicode-bidi: isolate !important;
+}

@@ -1,0 +1,9 @@
+{
+  "markdown.styles": [
+    ".vscode/markdown-rtl.css"
+  ],
+  "markdown.preview.fontFamily": "Vazirmatn, Segoe UI, sans-serif",
+  "[markdown]": {
+    "editor.wordWrap": "on"
+  }
+}
